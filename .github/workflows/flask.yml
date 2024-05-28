@@ -1,11 +1,11 @@
-name: Deploy Flask app to Google Cloud Run
+name: Deploy Next.js app to Google Cloud Run
 
 on:
   push:
     branches: [main]
 
 env:
-  app: flask
+  app: nextjs-app
 
 jobs:
   build:
@@ -35,11 +35,11 @@ jobs:
         id: compute
         run: echo "image=${{ vars.REGISTRY }}/${{ steps.actor.outputs.lower }}-${{ env.app }}:latest" >> "$GITHUB_OUTPUT"
       - name: Build Docker image
-        uses: docker/build-push-action@v5
+        uses: flask/build-push-action@v5
         with:
           push: true
-          context: flask
-          file: flask/Dockerfile
+          context: nextjs
+          file: nextjs/Dockerfile
           tags: ${{ steps.compute.outputs.image }}
       - name: Deploy to Google Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
